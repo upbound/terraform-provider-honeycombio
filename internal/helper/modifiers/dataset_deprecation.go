@@ -43,7 +43,9 @@ func (m datasetDeprecation) PlanModifyString(ctx context.Context, req planmodifi
 		}
 	}
 
-	if !req.PlanValue.Equal(req.StateValue) {
+	// compare the value this modifier planned, not the incoming plan: on update the
+	// framework has already marked an unset Optional+Computed dataset unknown
+	if !resp.PlanValue.Equal(req.StateValue) {
 		// require replacement only if the dataset value is otherwise changing
 		resp.RequiresReplace = true
 		return
